@@ -1,9 +1,10 @@
-<script setup></script>
-
 <template>
-  <div>
+  <BaseLayout>
     <RouterView />
-  </div>
+  </BaseLayout>
 </template>
+<script setup>
+import BaseLayout from '@/components/layout/BaseLayout.vue'
+</script>
 
 <style scoped></style>

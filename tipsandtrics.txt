@@ -1,0 +1,2 @@
+Perfect 💪 — that’s the right approach for smooth UX.
+This is called optimistic UI update, where we update the UI immediately before waiting for the API response (and roll back if it fails).
