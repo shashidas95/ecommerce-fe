@@ -1,4 +1,4 @@
-<template lang="">
+<template>
   <!-- START MAIN CONTENT -->
   <div class="main_content">
     <!-- START SECTION SHOP -->
@@ -9,12 +9,12 @@
             <div class="toggle_info">
               <span
                 ><i class="fas fa-user"></i>Returning customer?
-                <a
-                  href="#loginform"
+                <router-link
+                  to="/login"
                   data-bs-toggle="collapse"
                   class="collapsed"
                   aria-expanded="false"
-                  >Click here to login</a
+                  >Click here to login</router-link
                 ></span
               >
             </div>
@@ -93,12 +93,16 @@
                 <div class="coupon field_form input-group">
                   <input
                     type="text"
-                    value=""
+                    v-model="couponCode"
                     class="form-control"
                     placeholder="Enter Coupon Code.."
                   />
                   <div class="input-group-append">
-                    <button class="btn btn-fill-out btn-sm" type="submit">
+                    <button
+                      class="btn btn-fill-out btn-sm"
+                      @click="cart.applyDiscount(couponCode)"
+                      type="button"
+                    >
                       Apply Coupon
                     </button>
                   </div>
@@ -128,6 +132,7 @@
                   required
                   class="form-control"
                   name="fname"
+                  v-model="form.firstName"
                   placeholder="First name *"
                 />
               </div>
@@ -137,6 +142,7 @@
                   required
                   class="form-control"
                   name="lname"
+                  v-model="form.lastName"
                   placeholder="Last name *"
                 />
               </div>
@@ -146,13 +152,14 @@
                   required
                   type="text"
                   name="cname"
+                  v-model="form.companyName"
                   placeholder="Company Name"
                 />
               </div>
               <div class="form-group mb-3">
                 <div class="custom_select">
-                  <select class="form-control">
-                    <option value="">Select an option...</option>
+                  <select v-model="form.country" class="form-control" required>
+                    <option value="">Select Country.</option>
                     <option value="AX">Aland Islands</option>
                     <option value="AF">Afghanistan</option>
                     <option value="AL">Albania</option>
@@ -410,6 +417,7 @@
                   class="form-control"
                   name="billing_address"
                   required=""
+                  v-model="form.address"
                   placeholder="Address *"
                 />
               </div>
@@ -418,6 +426,7 @@
                   type="text"
                   class="form-control"
                   name="billing_address2"
+                  v-model="form.billingAddress2"
                   required=""
                   placeholder="Address line2"
                 />
@@ -428,6 +437,7 @@
                   required
                   type="text"
                   name="city"
+                  v-model="form.city"
                   placeholder="City / Town *"
                 />
               </div>
@@ -437,6 +447,7 @@
                   required
                   type="text"
                   name="state"
+                  v-model="form.state"
                   placeholder="State / County *"
                 />
               </div>
@@ -446,6 +457,7 @@
                   required
                   type="text"
                   name="zipcode"
+                  v-model="form.zip"
                   placeholder="Postcode / ZIP *"
                 />
               </div>
@@ -455,6 +467,7 @@
                   required
                   type="text"
                   name="phone"
+                  v-model="form.phone"
                   placeholder="Phone *"
                 />
               </div>
@@ -464,12 +477,13 @@
                   required
                   type="text"
                   name="email"
+                  v-model="form.email"
                   placeholder="Email address *"
                 />
               </div>
               <div class="form-group mb-3">
                 <div class="chek-form">
-                  <div class="custome-checkbox">
+                  <div class="custom-checkbox">
                     <input
                       class="form-check-input"
                       type="checkbox"
@@ -865,7 +879,10 @@
               <div class="heading_s1">
                 <h4>Your Orders</h4>
               </div>
-              <div class="table-responsive order_table">
+              <div
+                class="table-responsive order_table"
+                v-if="cart.items.length"
+              >
                 <table class="table">
                   <thead>
                     <tr>
@@ -874,31 +891,22 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr v-for="(item, index) in cart.items" :key="item.id">
                       <td>
-                        Blue Dress For Woman
-                        <span class="product-qty">x 2</span>
+                        {{ item.product.title }}-{{ item.variation.size }}-{{
+                          item.variation.color
+                        }}
+                        <span class="product-qty">x {{ item.quantity }}</span>
                       </td>
-                      <td>$90.00</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        Lether Gray Tuxedo <span class="product-qty">x 1</span>
-                      </td>
-                      <td>$55.00</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        woman full sliv dress
-                        <span class="product-qty">x 3</span>
-                      </td>
-                      <td>$204.00</td>
+                      <td>${{ (item.price * item.quantity).toFixed(2) }}</td>
                     </tr>
                   </tbody>
                   <tfoot>
                     <tr>
                       <th>SubTotal</th>
-                      <td class="product-subtotal">$349.00</td>
+                      <td class="product-subtotal">
+                        ${{ cart.cartTotalAfterDiscount.toFixed(2) }}
+                      </td>
                     </tr>
                     <tr>
                       <th>Shipping</th>
@@ -906,17 +914,22 @@
                     </tr>
                     <tr>
                       <th>Total</th>
-                      <td class="product-subtotal">$349.00</td>
+                      <td class="product-subtotal">
+                        ${{ cart.cartTotalAfterDiscount.toFixed(2) }}
+                      </td>
                     </tr>
                   </tfoot>
                 </table>
               </div>
+
+              <p v-else>Your cart is empty.</p>
+
               <div class="payment_method">
                 <div class="heading_s1">
                   <h4>Payment</h4>
                 </div>
                 <div class="payment_option">
-                  <div class="custome-radio">
+                  <div class="custom-radio">
                     <input
                       class="form-check-input"
                       required=""
@@ -934,7 +947,7 @@
                       available, but the majority have suffered alteration.
                     </p>
                   </div>
-                  <div class="custome-radio">
+                  <div class="custom-radio">
                     <input
                       class="form-check-input"
                       type="radio"
@@ -968,7 +981,12 @@
                   </div>
                 </div>
               </div>
-              <a href="#" class="btn btn-fill-out btn-block">Place Order</a>
+              <a
+                href="#"
+                @click="placeOrder()"
+                class="btn btn-fill-out btn-block"
+                >Place Order</a
+              >
             </div>
           </div>
         </div>
@@ -1012,4 +1030,56 @@
   </div>
   <!-- END MAIN CONTENT -->
 </template>
-<script setup></script>
+<script setup>
+import { useCart } from '@/stores/cart'
+import { ref, reactive } from 'vue'
+import { toast } from 'vue3-toastify'
+
+const cart = useCart()
+const couponCode = ref('')
+// reactive form data
+const form = reactive({
+  firstName: '',
+  lastName: '',
+  companyName: '',
+  country: '',
+  address: '',
+  city: '',
+  state: '',
+  zip: '',
+  phone: '',
+  email: '',
+  notes: '',
+})
+// list of required fields
+// ✅ required fields with user-friendly labels
+const requiredFields = {
+  firstName: 'First Name',
+  lastName: 'Last Name',
+  email: 'Email',
+  address: 'Address',
+  city: 'City',
+  zip: 'ZIP Code',
+  country: 'Country',
+  phone: 'Phone Number',
+}
+const placeOrder = () => {
+  if (cart.items.length === 0) {
+    return toast.error('your cart is empty')
+  }
+
+  // ✅ validate all required fields
+  for (const [key, label] of Object.entries(requiredFields)) {
+    if (!form[key]) {
+      return toast.error(`Please fill in ${label}`)
+    }
+  }
+  const orderData = {
+    ...form,
+    cartItems: cart.items,
+    total: cart.cartTotalAfterDiscount,
+  }
+  console.log('Order placed!', orderData)
+  toast.success(`Order placed successfully for ${form.firstName}!`)
+}
+</script>

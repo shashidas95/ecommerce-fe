@@ -5,6 +5,8 @@ import { useAuth } from "./auth";
 import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 
+import { useCart } from '@/stores/cart'
+
 
 
 
@@ -12,7 +14,8 @@ export const useWishlist = defineStore('wishlist', () => {
  const auth = useAuth()
  const items = ref([])
  const router = useRouter()
- const selectedVariations = ref({})
+ const cart = useCart()
+ // const selectedVariations = ref({})
  const showDropdown = ref(false)
 
  //load from the backend
@@ -34,7 +37,8 @@ export const useWishlist = defineStore('wishlist', () => {
    return
   }
 
-  const variationId = selectedVariations.value[product.id] || null
+  // const variationId = selectedVariations.value[product.id] || null
+  const variationId = cart.selectedVariations[product.id] || null
 
   if (product.variations && product.variations.length > 0 && !variationId) {
    toast.warn('Please select a variation first')
@@ -86,7 +90,6 @@ export const useWishlist = defineStore('wishlist', () => {
  }
  return {
   items,
-  selectedVariations,
   fetchWishlist,
   addToWishlist,
   removeFromWishlist,

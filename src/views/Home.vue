@@ -128,9 +128,11 @@
                         <div class="product_action_box">
                           <ul class="list_none pr_action_btn">
                             <li class="add-to-cart">
-                              <router-link to="/add/cart"
+                              <a
+                                @click.prevent="cart.addToCart(product)"
+                                href="#"
                                 ><i class="icon-basket-loaded"></i> Add To
-                                Cart</router-link
+                                Cart</a
                               >
                             </li>
                             <li>
@@ -181,9 +183,12 @@
                                 class="btn btn-outline-secondary btn-sm me-1"
                                 :class="{
                                   active:
-                                    wishlist.selectedVariations[product.id] === v.id,
+                                    cart.selectedVariations[product.id] ===
+                                    v.id,
                                 }"
-                                @click="wishlist.selectedVariations[product.id] = v.id"
+                                @click="
+                                  cart.selectedVariations[product.id] = v.id
+                                "
                               >
                                 {{ v.size }}
                               </button>
@@ -199,11 +204,14 @@
                                 :style="{
                                   backgroundColor: v.color.toLowerCase(),
                                   border:
-                                    wishlist.selectedVariations[product.id] === v.id
+                                    cart.selectedVariations[product.id] ===
+                                    v.id
                                       ? '2px solid #ccc'
                                       : '1px solid #ccc',
                                 }"
-                                @click="wishlist.selectedVariations[product.id] = v.id"
+                                @click="
+                                  cart.selectedVariations[product.id] = v.id
+                                "
                                 title="Select {{ v.color }} - {{ v.size }}"
                               ></span>
                             </div>
@@ -223,6 +231,7 @@
                         <div class="pr_desc">
                           <p>
                             {{ product.short_desc }}
+                                {{ product.quantity }}
                           </p>
                         </div>
                         <div class="pr_switch_wrap">
@@ -2522,12 +2531,14 @@ import { useRouter } from 'vue-router'
 import { useAuth } from '@/stores/auth'
 import { toast } from 'vue3-toastify'
 import { useWishlist } from '@/stores/wishlist'
+import { useCart } from '@/stores/cart'
 
 const message = ref('')
 const products = ref([])
 const auth = useAuth()
 const router = useRouter()
 const wishlist = useWishlist()
+const cart = useCart()
 const selectedVariations = reactive({})
 // defineProps({ product: Object })
 onMounted(async () => {
@@ -2566,8 +2577,6 @@ onMounted(async () => {
 //     toast.error(error.response?.data?.message || 'Failed to add to wishlist')
 //   }
 // }
-
-
 </script>
 
 <style scoped>

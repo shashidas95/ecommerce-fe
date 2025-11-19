@@ -423,7 +423,7 @@
                     <tr>
                       <td class="cart_total_label">Cart Subtotal</td>
                       <td class="cart_total_amount">
-                        ${{ cart.cartTotalAfterDiscount }}
+                        ${{ cart.cartTotalAfterDiscount.toFixed(2) }}
                       </td>
                     </tr>
                     <tr>
@@ -433,13 +433,13 @@
                     <tr>
                       <td class="cart_total_label">Total</td>
                       <td class="cart_total_amount">
-                        <strong>${{ cart.cartTotalAfterDiscount }}</strong>
+                        <strong>${{ cart.cartTotalAfterDiscount.toFixed(2) }}</strong>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <a href="#" class="btn btn-fill-out">Proceed To CheckOut</a>
+              <router-link to="/checkout" class="btn btn-fill-out" :class="{disabled: cart.cartCount===0}">Proceed To CheckOut</router-link>
             </div>
           </div>
         </div>

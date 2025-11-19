@@ -6,6 +6,7 @@ import Wishlist from '@/views/Wishlist.vue'
 import Cart from '@/views/Cart.vue'
 import MyAccount from '@/views/dashboard/MyAccount.vue'
 import { useAuth } from '@/stores/auth'
+import Checkout from '@/views/Checkout.vue'
 
 
 const router = createRouter({
@@ -16,7 +17,9 @@ const router = createRouter({
     { path: '/', name: 'home', component: Home },
     { path: '/wishlist', name: 'wishlist', component: Wishlist, meta: { requireAuth: true } },
     { path: '/cart', name: 'cart', component: Cart, meta: { requireAuth: true } },
-    { path: '/dashboard/my-account', Name: 'my-account', component: MyAccount, meta: { requireAuth: true } },
+   
+    { path: '/dashboard/my-account', name: 'my-account', component: MyAccount, meta: { requireAuth: true } },
+    { path: '/checkout', name: 'checkout', component: () => import('@/views/Checkout.vue'), meta: { requireAuth: true } },
 
   ],
 })
